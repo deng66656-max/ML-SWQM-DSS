@@ -1,0 +1,42 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Backups and archives
+backups/
+data_backup/
+*_backup.py
+*_backup_before_*.py
+app_damaged_backup.py
+app_working_backup.py
+app_restored*.py
+
+# Generated files
+*.log
+*.tmp
+
+# Python cache / generated artifacts
+*.pyc
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+
+data/research_archive/
+data/raw/
