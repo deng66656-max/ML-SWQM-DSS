@@ -1,7 +1,8 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyc
 
 # Virtual environment
 .venv/
@@ -20,6 +21,7 @@ env/
 # Backups and archives
 backups/
 data_backup/
+swgm_archive/
 *_backup.py
 *_backup_before_*.py
 app_damaged_backup.py
@@ -30,13 +32,15 @@ app_restored*.py
 *.log
 *.tmp
 
-# Python cache / generated artifacts
-*.pyc
-
 # OS / editor files
 .DS_Store
 Thumbs.db
 .vscode/
 
+# Research archive
 data/research_archive/
-data/raw/
+
+data/raw/lake_victoria/Deirmendjian_et_al_2020_Ecological_Changes_Lake_Victoria.xlsx
+data/raw/south_sudan/south_sudan_water_quality_source.pdf
+
+data/raw/Maziba_Water_Quality_backup.xlsx
