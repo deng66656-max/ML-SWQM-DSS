@@ -1,3 +1,4 @@
+﻿# -*- coding: utf-8 -*-
 # ============================================================
 # ML-SWQM-DSS
 # Machine Learning-based Surface Water Quality Monitoring
@@ -155,7 +156,7 @@ SCREENING_THRESHOLDS = {
         "label": "Temperature",
         "minimum": 15.0,
         "maximum": 30.0,
-        "unit": "�C",
+        "unit": "°C",
     },
 }
 
@@ -1117,7 +1118,7 @@ def render_sidebar():
     )
 
     st.sidebar.caption(
-        "18 stations × 2 years = 36 observations"
+        "18 stations Ã— 2 years = 36 observations"
     )
 
     return page
@@ -1535,7 +1536,7 @@ def show_monitoring_data(data):
     ).encode("utf-8")
 
     st.download_button(
-        "?? Download Filtered Data",
+        "??Â Download Filtered Data",
         data=csv_data,
         file_name="upper_athi_filtered_data.csv",
         mime="text/csv",
@@ -1565,7 +1566,7 @@ def show_ml_predictions(data, model_features):
         '<br>'
         '<b>Input:</b> 10 water-quality features'
         '<br>'
-        '<b>Output:</b> Predicted WQI (0–100)'
+        '<b>Output:</b> Predicted WQI (0â€“100)'
         '<br>'
         '<b>Risk:</b> Derived from predicted WQI rather than '
         'from a separate classifier.'
@@ -1681,7 +1682,7 @@ def show_ml_predictions(data, model_features):
     st.divider()
 
     st.subheader(
-        "??� Inspect an Individual Observation"
+        "?? Inspect an Individual Observation"
     )
 
     options = data.index.tolist()
@@ -1762,7 +1763,7 @@ def show_ml_predictions(data, model_features):
     ).encode("utf-8")
 
     st.download_button(
-        "?? Download ML Prediction Results",
+        "??Â Download ML Prediction Results",
         data=prediction_csv,
         file_name="athi_ml_predictions.csv",
         mime="text/csv",
@@ -1777,7 +1778,7 @@ def show_risk_analysis(data):
     """Risk assessment page."""
 
     st.header(
-        "?? Water Quality Risk Analysis"
+        "??Â Water Quality Risk Analysis"
     )
 
     st.write(
@@ -1995,7 +1996,7 @@ def show_water_quality_analysis(data):
     """Detailed parameter analysis."""
 
     st.header(
-        "📈 Water Quality Analysis"
+        "ðŸ“ˆ Water Quality Analysis"
     )
 
     parameters = [
@@ -2505,7 +2506,7 @@ def show_model_information(
     st.warning(
         "Methodological limitation: the current model was "
         "trained on 36 station-year observations from 18 "
-        "monitoring stations over two years. Its R�/MAE/RMSE "
+        "monitoring stations over two years. Its R²/MAE/RMSE "
         "results should therefore be treated as exploratory "
         "baseline performance rather than proof of "
         "generalizable future forecasting capability."
@@ -2520,7 +2521,7 @@ def show_data_quality(data):
     """Data-quality diagnostics."""
 
     st.header(
-        "✅ Data Quality"
+        "âœ… Data Quality"
     )
 
     # --------------------------------------------------------
@@ -2766,8 +2767,8 @@ def show_petroleum_event_screening(data):
         [
             "Unknown",
             "Less than 1 hour",
-            "1–6 hours",
-            "6–24 hours",
+            "1â€“6 hours",
+            "6â€“24 hours",
             "More than 24 hours",
         ],
         key="petroleum_event_duration",
@@ -2869,7 +2870,7 @@ def show_petroleum_event_screening(data):
         station_name = str(row[name_column])
 
         station_labels[
-            f"{station_id} — {station_name}"
+            f"{station_id} â€” {station_name}"
         ] = station_id
 
     selected_label = st.selectbox(
@@ -3013,8 +3014,8 @@ def show_petroleum_event_screening(data):
     duration_scores = {
         "Unknown": 0,
         "Less than 1 hour": 2,
-        "1–6 hours": 5,
-        "6–24 hours": 10,
+        "1â€“6 hours": 5,
+        "6â€“24 hours": 10,
         "More than 24 hours": 15,
     }
 
@@ -3358,7 +3359,7 @@ def show_station_comparison(data):
         station_name = str(row[name_column])
 
         station_labels[
-            f"{station_id} — {station_name}"
+            f"{station_id} â€” {station_name}"
         ] = station_id
 
     if len(station_labels) < 2:
@@ -3985,7 +3986,7 @@ def show_station_investigation(data):
 
     st.title("Station Investigation & Source Screening")
     st.caption(
-        "Upper Athi River Catchment • Station-level environmental investigation"
+        "Upper Athi River Catchment â€¢ Station-level environmental investigation"
     )
 
     if data is None or data.empty:
@@ -4077,7 +4078,7 @@ def show_station_investigation(data):
 
     station_labels = {
         row["station"]:
-            f'{row["station"]} — {row["station_name"]}'
+            f'{row["station"]} â€” {row["station_name"]}'
         for _, row in station_options.iterrows()
     }
 
@@ -4320,7 +4321,7 @@ def show_station_investigation(data):
         {
             "Parameter": "pH",
             "Observed": latest["ph"],
-            "Screening criterion": "6.5–8.5",
+            "Screening criterion": "6.5â€“8.5",
             "Status": (
                 "Flagged"
                 if not (6.5 <= latest["ph"] <= 8.5)
@@ -4350,7 +4351,7 @@ def show_station_investigation(data):
         {
             "Parameter": "Temperature",
             "Observed": latest["temperature"],
-            "Screening criterion": "15–30 �C",
+            "Screening criterion": "15â€“30 °C",
             "Status": (
                 "Flagged"
                 if not (15 <= latest["temperature"] <= 30)
@@ -4524,7 +4525,7 @@ def show_station_investigation(data):
 
     st.info(
         f"""
-        **Station:** {selected_station} — {station_labels.get(selected_station, "")}
+        **Station:** {selected_station} â€” {station_labels.get(selected_station, "")}
 
         **Current screening interpretation:** This station has a mean WQI of
         {mean_wqi:.2f} and is classified as **{category}**, with a screening
@@ -4560,7 +4561,7 @@ def show_petroleum_dss(data):
 
     st.title("Petroleum Environmental Decision Support")
     st.caption(
-        "Upper Athi River Catchment • Petroleum-focused surface-water "
+        "Upper Athi River Catchment â€¢ Petroleum-focused surface-water "
         "quality screening and decision support"
     )
 
@@ -4876,7 +4877,7 @@ def show_petroleum_dss(data):
         "pH",
         "ph",
         lambda x: (x < 6.5) | (x > 8.5),
-        "6.5–8.5",
+        "6.5â€“8.5",
     )
 
     add_indicator(
@@ -4897,7 +4898,7 @@ def show_petroleum_dss(data):
         "Temperature",
         "temperature",
         lambda x: (x < 15) | (x > 30),
-        "15–30 �C",
+        "15â€“30 °C",
     )
 
     indicator_df = pd.DataFrame(indicator_rows)
@@ -5136,7 +5137,7 @@ def show_about():
     """Application information."""
 
     st.header(
-        "?? About ML-SWQM-DSS"
+        "??Â About ML-SWQM-DSS"
     )
 
     st.markdown(
@@ -5184,7 +5185,7 @@ def show_about():
 
         The Upper Athi case study contains:
 
-        **18 monitoring stations × 2 years = 36 station-year observations**
+        **18 monitoring stations Ã— 2 years = 36 station-year observations**
         observations.**
 
         ### Important academic limitation
