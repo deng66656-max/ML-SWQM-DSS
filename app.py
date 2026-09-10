@@ -14,6 +14,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import streamlit as st
+st.logo("static/images/logo.png", size="large")
 import plotly.express as px
 import plotly.graph_objects as go
 
