@@ -10,7 +10,7 @@
           content="Machine Learning-Based Surface Water Quality Monitoring and Decision Support System">
 
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" href="../static/icons/icon-192.png">
+    <link rel="icon" href="./static/icons/icon-192.png">
 
     <title>ML-SWQM-DSS</title>
 
@@ -40,6 +40,17 @@
         src="https://ml-swqm-dss-syikyyc9zbv3fncbgykuue.streamlit.app/?embed=true"
         title="ML-SWQM-DSS">
     </iframe>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("./service-worker.js")
+                    .catch(error => {
+                        console.error("Service worker registration failed:", error);
+                    });
+            });
+        }
+    </script>
 
 </body>
 </html>
