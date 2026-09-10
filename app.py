@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # ============================================================
 # ML-SWQM-DSS
 # Machine Learning-based Surface Water Quality Monitoring
@@ -26,7 +26,7 @@ import plotly.graph_objects as go
 
 st.set_page_config(
     page_title="ML-SWQM-DSS | Upper Athi River",
-    page_icon="??",
+    page_icon="💧",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -1067,7 +1067,7 @@ def render_sidebar():
     """Render application navigation."""
 
     st.sidebar.markdown(
-        "## ?? ML-SWQM-DSS"
+        "## ML-SWQM-DSS"
     )
 
     st.sidebar.caption(
@@ -1133,7 +1133,7 @@ def render_header():
 
     st.markdown(
         '<div class="main-title">'
-        '?? ML-SWQM-DSS'
+        'ML-SWQM-DSS'
         '</div>',
         unsafe_allow_html=True,
     )
@@ -1174,7 +1174,7 @@ def show_dashboard(data):
     """Main dashboard."""
 
     st.header(
-        "?? Water Quality Dashboard"
+        "Water Quality Dashboard"
     )
 
     # --------------------------------------------------------
@@ -1413,7 +1413,7 @@ def show_monitoring_data(data):
     """Monitoring data page."""
 
     st.header(
-        "?? Upper Athi Monitoring Data"
+        "Upper Athi Monitoring Data"
     )
 
     st.write(
@@ -1551,7 +1551,7 @@ def show_ml_predictions(data, model_features):
     """Machine-learning prediction page."""
 
     st.header(
-        "?? Machine Learning Predictions"
+        "Machine Learning Predictions"
     )
 
     st.write(
@@ -2242,7 +2242,7 @@ def show_model_information(
     """Display model information."""
 
     st.header(
-        "?? Model Information"
+        "Model Information"
     )
 
     st.markdown(
@@ -5486,4 +5486,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
