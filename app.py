@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # ML-SWQM-DSS
 # Machine Learning-based Surface Water Quality Monitoring
 # and Decision Support System
@@ -161,11 +161,11 @@ SCREENING_THRESHOLDS = {
 
 # ============================================================
 # CUSTOM CSS
-# ============================================================
 
 st.markdown(
     """
     <style>
+
         .main-title {
             font-size: 2.2rem;
             font-weight: 700;
@@ -178,28 +178,35 @@ st.markdown(
             margin-bottom: 1.2rem;
         }
 
-        .warning-box {
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e0b84c;
-            background-color: #fff8df;
-            margin-bottom: 15px;
+        .block-container {
+            max-width: 1400px;
+            padding-top: 2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            padding-bottom: 3rem;
         }
 
-        .info-box {
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #9ecae1;
-            background-color: #eef8fc;
-            margin-bottom: 15px;
-        }
-
+        .warning-box,
+        .info-box,
         .success-box {
             padding: 15px;
             border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .warning-box {
+            border: 1px solid #e0b84c;
+            background-color: #fff8df;
+        }
+
+        .info-box {
+            border: 1px solid #9ecae1;
+            background-color: #eef8fc;
+        }
+
+        .success-box {
             border: 1px solid #9ccc9c;
             background-color: #eef8ee;
-            margin-bottom: 15px;
         }
 
         .metric-label {
@@ -214,11 +221,130 @@ st.markdown(
 
         div[data-testid="stMetric"] {
             border-radius: 8px;
+            padding: 0.75rem;
         }
+
+        div[data-testid="stDataFrame"] {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        div[data-testid="stPlotlyChart"] {
+            width: 100%;
+        }
+
+        div.stButton > button {
+            min-height: 42px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        div[data-baseweb="select"] {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+
+            .block-container {
+                padding-top: 1rem;
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+                padding-bottom: 2rem;
+            }
+
+            .main-title {
+                font-size: 1.65rem;
+                line-height: 1.2;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            .warning-box,
+            .info-box,
+            .success-box {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+
+            .metric-label {
+                font-size: 0.8rem;
+            }
+
+            .small-text {
+                font-size: 0.78rem;
+            }
+
+            div[data-testid="stMetric"] {
+                padding: 0.5rem;
+            }
+
+            div.stButton > button {
+                width: 100%;
+                min-height: 44px;
+                font-size: 0.95rem;
+            }
+
+            div[data-testid="stDataFrame"] {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            div[data-testid="stPlotlyChart"] {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            button[data-baseweb="tab"] {
+                font-size: 0.85rem;
+                padding-left: 0.6rem;
+                padding-right: 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .block-container {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .main-title {
+                font-size: 1.4rem;
+            }
+
+            .subtitle {
+                font-size: 0.82rem;
+            }
+
+            div[data-testid="stMetric"] {
+                padding: 0.4rem;
+            }
+
+            button[data-baseweb="tab"] {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+
+            .block-container {
+                padding-left: 3rem;
+                padding-right: 3rem;
+            }
+
+            .main-title {
+                font-size: 2.3rem;
+            }
+        }
+
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 
 
 # ============================================================
@@ -787,36 +913,39 @@ def prepare_dataset(df, model, model_features):
     # Model Prediction
     # --------------------------------------------------------
 
+    # --------------------------------------------------------
+    # Model Prediction
+    # --------------------------------------------------------
+
+    # Build model input from the application dataframe.
+    X = data.copy()
+
+    # The application normalizes dataset columns to lowercase,
+    # while the trained model was fitted using "pH".
+    if "pH" in model_features and "pH" not in X.columns and "ph" in X.columns:
+        X["pH"] = X["ph"]
+
+    # Use cleaned chlorophyll-a for modelling when available.
+    if "chla" in model_features and "chla_clean" in X.columns:
+        X["chla"] = X["chla_clean"]
+
+    # Confirm that every model feature is available.
     missing_features = [
         feature
         for feature in model_features
-        if feature not in data.columns
+        if feature not in X.columns
     ]
 
     if missing_features:
         data["predicted_wqi"] = np.nan
 
     else:
-
-        X = data[
-            model_features
-        ].copy()
-
-        # Use cleaned chlorophyll-a for modelling.
-        if "chla" in model_features:
-            if "chla_clean" in data.columns:
-                X["chla"] = data[
-                    "chla_clean"
-                ]
+        X = X[model_features].copy()
 
         for column in model_features:
-            X[column] = safe_numeric(
-                X[column]
-            )
+            X[column] = safe_numeric(X[column])
 
-        valid_rows = X.notna().all(
-            axis=1
-        )
+        valid_rows = X.notna().all(axis=1)
 
         predictions = pd.Series(
             np.nan,
@@ -825,15 +954,10 @@ def prepare_dataset(df, model, model_features):
         )
 
         if valid_rows.any():
-
             with warnings.catch_warnings():
-                warnings.simplefilter(
-                    "ignore"
-                )
+                warnings.simplefilter("ignore")
 
-                predictions.loc[
-                    valid_rows
-                ] = model.predict(
+                predictions.loc[valid_rows] = model.predict(
                     X.loc[
                         valid_rows,
                         model_features,
@@ -1404,7 +1528,7 @@ def show_monitoring_data(data):
     ).encode("utf-8")
 
     st.download_button(
-        "⬇️ Download Filtered Data",
+        "⬇️ Download Filtered Data",
         data=csv_data,
         file_name="upper_athi_filtered_data.csv",
         mime="text/csv",
@@ -1631,7 +1755,7 @@ def show_ml_predictions(data, model_features):
     ).encode("utf-8")
 
     st.download_button(
-        "⬇️ Download ML Prediction Results",
+        "⬇️ Download ML Prediction Results",
         data=prediction_csv,
         file_name="athi_ml_predictions.csv",
         mime="text/csv",
@@ -1646,7 +1770,7 @@ def show_risk_analysis(data):
     """Risk assessment page."""
 
     st.header(
-        "⚠️ Water Quality Risk Analysis"
+        "⚠️ Water Quality Risk Analysis"
     )
 
     st.write(
@@ -2110,7 +2234,7 @@ def show_model_information(
     """Display model information."""
 
     st.header(
-        "🧠 Model Information"
+        "🧪 Model Information"
     )
 
     st.markdown(
@@ -3412,7 +3536,7 @@ def show_station_comparison(data):
 
     st.dataframe(
         display_summary,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -3458,7 +3582,7 @@ def show_station_comparison(data):
 
     st.dataframe(
         parameter_summary.round(3),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -3577,7 +3701,7 @@ def show_station_comparison(data):
 
         st.dataframe(
             difference_df.round(3),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -3649,7 +3773,7 @@ def show_station_comparison(data):
 
         st.dataframe(
             deterioration_df.round(3),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -3743,7 +3867,7 @@ def show_station_comparison(data):
             pd.DataFrame(
                 petroleum_summary
             ).round(4),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -4112,7 +4236,7 @@ def show_station_investigation(data):
 
     st.dataframe(
         history.round(3),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -4174,7 +4298,7 @@ def show_station_investigation(data):
 
             st.dataframe(
                 comparison.round(3),
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 
@@ -4232,7 +4356,7 @@ def show_station_investigation(data):
 
     st.dataframe(
         parameter_df.round(3),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -4305,7 +4429,7 @@ def show_station_investigation(data):
 
     st.dataframe(
         pathway_table,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -4701,7 +4825,7 @@ def show_petroleum_dss(data):
 
     st.dataframe(
         display_station_summary,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -4773,7 +4897,7 @@ def show_petroleum_dss(data):
 
     st.dataframe(
         indicator_df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -4812,7 +4936,7 @@ def show_petroleum_dss(data):
 
     st.dataframe(
         pathway_data,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -4924,7 +5048,7 @@ def show_petroleum_dss(data):
 
     st.dataframe(
         decision_table,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -5003,7 +5127,7 @@ def show_about():
     """Application information."""
 
     st.header(
-        "ℹ️ About ML-SWQM-DSS"
+        "ℹ️ About ML-SWQM-DSS"
     )
 
     st.markdown(
@@ -5051,7 +5175,7 @@ def show_about():
 
         The Upper Athi case study contains:
 
-        **18 monitoring stations × 2 years = 36 station-year
+        **18 monitoring stations × 2 years = 36 station-year observations**
         observations.**
 
         ### Important academic limitation
@@ -5112,12 +5236,12 @@ def show_system_status(
 
         st.write(
             "Dataset:",
-            "✅ Loaded" if not data.empty else "❌ Empty",
+            "✅ Loaded" if not data.empty else "❌ Not Loaded"
         )
 
         st.write(
             "Random Forest:",
-            "✅ Loaded" if model is not None else "❌ Missing",
+            "✅ Loaded" if model is not None else "❌ Not Loaded"
         )
 
         st.write(
